@@ -1,5 +1,11 @@
 import app, { init } from "@/app";
-import { createEnrollmentWithAddress, createTicket, createTicketType, createUser } from "../factories";
+import {
+  createEnrollmentWithAddress,
+  createTicket,
+  createTicketType,
+  createTicketTypeWithHotel,
+  createUser,
+} from "../factories";
 import faker from "@faker-js/faker";
 import httpStatus from "http-status";
 import supertest from "supertest";
@@ -67,7 +73,7 @@ describe("GET /hotels", () => {
       const user = await createUser();
       const token = await generateValidToken(user);
       const enrollment = await createEnrollmentWithAddress(user);
-      const ticketType = await createTicketType();
+      const ticketType = await createTicketTypeWithHotel();
       const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
 
       const hotel = await createHotel();
@@ -79,8 +85,8 @@ describe("GET /hotels", () => {
           id: hotel.id,
           name: hotel.name,
           image: hotel.image,
-          createdAt: hotel.createdAt,
-          updatedAt: hotel.updatedAt,
+          createdAt: hotel.createdAt.toISOString(),
+          updatedAt: hotel.updatedAt.toISOString(),
         },
       ]);
     });
